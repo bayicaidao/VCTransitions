@@ -46,8 +46,13 @@
 
 -(void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
     //Get references to the view hierarchy
+    //  容器视图   转场动画在容器中进行。对于模态视图控制器的转场动画说这个控制器来展示模态视图。对于导航控制器的专场动画来说这个是Wrapper view，它控制了根视图控制器的视图的尺寸
     UIView *containerView = [transitionContext containerView];
+    
+    //  "From 视图控制器"      对于模态控制器的转场动画来说，这是推入或推出模态视图控制器的视图控制器。对于导航控制器来说，则是当前的视图控制器
     UIViewController *fromViewController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
+    
+    //  "To 视图控制器"    对于模态视图控制器的转场动画说，这是被推入或推出的视图控制器。对于导航控制器来说也是如此
     UIViewController *toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     
     if (self.type == AnimationTypePresent) {
@@ -94,7 +99,12 @@
     UIViewController *toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     
     //Insert 'to' view into hierarchy
-    toViewController.view.frame = [transitionContext finalFrameForViewController:toViewController];
+    /*
+     - (CGRect)initialFrameForViewController:(UIViewController *)vc;   当视图控制器的视图动画开始前的frame
+     
+     - (CGRect)finalFrameForViewController:(UIViewController *)vc;  当视图控制器的视图动画结束后的frame
+     */
+    toViewController.view.frame = [transitionContext finalFrameForViewController:toViewController];     //  当视图控制器的视图动画结束后的frame
     [containerView insertSubview:toViewController.view belowSubview:fromViewController.view];
     
     //Save reference for view to be scaled
